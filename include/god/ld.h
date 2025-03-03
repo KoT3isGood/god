@@ -10,6 +10,7 @@ enum link_type {
 
 struct link_settings {
         enum link_type type;
+        char* linker;
         char** lib_dirs;
         char** libs;
 };

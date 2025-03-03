@@ -28,6 +28,7 @@ struct project C_compile(struct project p, struct C_settings settings) {
         int i = 0;
         int b = 0;
         int numfiles=0;
+        int argsize=0;
 
 
         if (p.b==NULL) {
@@ -52,9 +53,32 @@ struct project C_compile(struct project p, struct C_settings settings) {
                 return (struct project){};
         };
 
-        /* Do not include anything */
-        if (settings.include_dirs==NULL) {};
+        /* Includes*/
+        i=0;
+        if (settings.include_dirs==NULL) {
+                includeargs="";
+                goto skip_include;
+        }
 
+        do {
+                argsize+=strlen(settings.include_dirs[i])+3;
+                i++;
+        } while (settings.include_dirs[i]);
+        argsize+=1;
+        includeargs = malloc(argsize);
+        memset(includeargs,0,argsize);
+
+        i=0;
+        do {
+               strcat(includeargs," -I"); 
+               strcat(includeargs,settings.include_dirs[i]); 
+               i++;
+        } while (settings.include_dirs[i]);
+        argsize=0;
+
+skip_include:
+
+        i=0;
         if (compiler==NULL) {
                 compiler="gcc";
         };
@@ -83,7 +107,7 @@ struct project C_compile(struct project p, struct C_settings settings) {
 
 
                 /* TODO: replace with execve */
-                char* command = string_clone("mkdir -p %s/ && gcc -fPIE -c %s -o %s", outputdir, p.files[i], outputfile);
+                char* command = string_clone("gcc -Wno-incompatible-pointer-types -g -fPIE -c %s%s -o %s", p.files[i], includeargs, outputfile);
                 if (!(i%2)) 
                         printf(TERMINAL_YELLOW"  [%i/%i] %s"TERMINAL_RESET,i+1,numfiles,command);
                 else
@@ -99,7 +123,7 @@ struct project C_compile(struct project p, struct C_settings settings) {
 
                 /* linux won't show colors */
                 char* term = getenv("TERM");
-                char* cmd = string_clone("export TERM=%s && %s",term,command);
+                char* cmd = string_clone("export TERM=%s && mkdir -p %s/ && %s",term,outputdir,command);
                 system(cmd);
         skip_build:
                 i++;

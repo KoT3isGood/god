@@ -21,7 +21,8 @@ int build(struct build_data b) {
         struct link_settings sett = {};
         sett.type=LINK_TYPE_EXECUTABLE;
         char* link_libraries[] = {
-                "c"
+                "c",
+                NULL,
         };
         sett.libs=link_libraries;
         char* exe = ld_link_project(god_obj, sett);
@@ -42,14 +43,15 @@ int build(struct build_data b) {
         struct link_settings lib_sett = {};
         lib_sett.type=LINK_TYPE_STATIC;
         char* lib_link_libraries[] = {
-                "c"
+                "c",
+                NULL,
         };
         lib_sett.libs=lib_link_libraries;
         char* lib = ld_link_project(god_lib_obj, lib_sett);
 
         mv("bin/god_test",exe);
         mv("bin/libgod.a",lib);
-        mv("bin","include"); 
+        mv("bin/","include"); 
 
         return 0;
 }
