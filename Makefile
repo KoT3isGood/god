@@ -30,3 +30,4 @@ libgod.a: $(LIBOBJFILES) src/common.o
 
 clean:
 	rm -rf $(LIBOBJFILES) .god bin
+	rm -rf *.o

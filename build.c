@@ -34,6 +34,7 @@ int build(struct build_data b) {
                 "src/library/ld.c",
                 "src/library/master.c",
                 "src/common.c",
+                NULL,
         };
         god_lib.files=god_lib_files;
         struct project god_lib_obj = C_compile(god_lib,settings);
@@ -46,9 +47,9 @@ int build(struct build_data b) {
         lib_sett.libs=lib_link_libraries;
         char* lib = ld_link_project(god_lib_obj, lib_sett);
 
-        mv("bin/god",exe);
+        mv("bin/god_test",exe);
         mv("bin/libgod.a",lib);
-        mv("bin/include","include"); 
+        mv("bin","include"); 
 
         return 0;
 }

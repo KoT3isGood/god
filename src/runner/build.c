@@ -10,10 +10,12 @@
 int build(int argc, char **argv) {
 
         char appdir[1024];
-        char *libdir;
-        if (!realpath(argv[-2],appdir)) {
+        ssize_t len = readlink("/proc/self/exe", appdir, sizeof(appdir) - 1);
+        if (len == -1) {
                 return 1;
         }
+        appdir[len] = '\0'; // Null-terminate the string
+        char *libdir;
 
         libdir=dirname(appdir);
         const char *link_dir = string_clone("-L%s", libdir);
@@ -33,7 +35,7 @@ int build(int argc, char **argv) {
         if (needs) {
         remove(script_dir);
 
-        char *args[] = {"/usr/bin/gcc","build.c","-o",".god/build",link_dir, include_dir,"-lgod","--include",build_dir,NULL};
+        char *args[] = {"/usr/bin/gcc","build.c","-o",".god/build",link_dir, include_dir,"-lgod","--include",build_dir,"-g",NULL};
 
         pid_t gcc = fork();
         if (gcc==-1) return 1; 
@@ -57,12 +59,14 @@ int build(int argc, char **argv) {
         char *script_args[] = {script_dir,NULL};
 
         if (build_script==0) {
-                if(execve(script_dir, script_args, env)!=0) {
-                        return 1;
-                }
+                system(".god/build");
         }
         wait(NULL);
 
         
         return 0;
 };
+int rebuild(int argc, char** argv) {
+        system("rm -rf .god");
+        return build(argc,argv);
+}

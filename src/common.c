@@ -6,16 +6,21 @@
 #include "sys/stat.h"
 
 char *string_clone(const char *str,...) {
+        /* Because of how C works we need second va_list. */
         va_list args;
         va_list args_copy;
         int lenght;
         char* new;
-        if (!str) return 0;
+
+        if (!str) return NULL;
         va_start(args, str);
         va_copy(args_copy, args);
+        
+        /* Create string. */
         lenght = vsnprintf(0,0,str,args_copy);
         new = malloc(lenght+1);
         vsnprintf(new, lenght+1, str, args);
+
         va_end(args);
         va_end(args_copy);
         return new;

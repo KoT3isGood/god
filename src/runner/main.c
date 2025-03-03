@@ -11,7 +11,8 @@ struct command_lookup_t {
 };
 
 struct command_lookup_t commands[] = {
-        {"build",build}
+        {"build",build},
+        {"rebuild",rebuild}
 };
 
 

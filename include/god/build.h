@@ -11,6 +11,9 @@ enum build_optimize {
         BUILD_OPTIMIZE_RELEASE_SIZE,
 };
 
+/*
+ *
+ */
 struct build_data {
         char* arch;
         char* os;
@@ -33,6 +36,10 @@ struct project {
         char** files;
 };
 
+/*
+ * mv() - moves file or directory from source to destination.
+ * dest and source should be valid strings
+ */
 void mv(char* dest, char* source);
 
 
