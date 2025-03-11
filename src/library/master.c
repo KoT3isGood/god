@@ -6,6 +6,6 @@
 int linkcounter = 0;
 int compilecounter = 0;
 void mv(char* dest, char* source) {
-        char* command = string_clone("cp -r %s %s",source,dest);
-        system(command);
+	char* command = string_clone("cp -r %s %s",source,dest);
+	system(command);
 };

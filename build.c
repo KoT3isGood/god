@@ -1,7 +1,8 @@
 #include "include/god/build.h"
 #include "include/god/c.h"
 #include "include/god/ld.h"
-#include "stdio.h"
+#include "include/god/utils.h"
+#include "stddef.h"
 
 int build(struct build_data b) {
         struct project god_exe={};
@@ -22,9 +23,15 @@ int build(struct build_data b) {
         sett.type=LINK_TYPE_EXECUTABLE;
         char* link_libraries[] = {
                 "c",
+		"god",
                 NULL,
         };
+        char* link_dirs[] = {
+		"bin",
+		NULL,
+	};
         sett.libs=link_libraries;
+        sett.lib_dirs=link_dirs;
         char* exe = ld_link_project(god_obj, sett);
 
         struct project god_lib={};

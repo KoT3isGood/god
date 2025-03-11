@@ -1,3 +1,6 @@
+# 
+
+
 CC=gcc
 AR=ar
 LD=ld
@@ -15,9 +18,8 @@ bin/:
 	mkdir -p .god
 	mkdir -p bin
 
-# Runner compiles build script, then runs it
 buildrunner: $(RUNNERFILES) $(COMMON)
-	$(CC) $(RUNNERFILES) $(COMMON) -g -o bin/god
+	$(CC) $(RUNNERFILES) $(COMMON) -g -o bin/god -Lbin -lgod
 
 src/library/%.o: src/library/%.c
 	$(CC) -c $< -g -o $@
@@ -30,4 +32,4 @@ libgod.a: $(LIBOBJFILES) src/common.o
 
 clean:
 	rm -rf $(LIBOBJFILES) .god bin
-	rm -rf *.o
+	find . -name "*.o" | xargs rm

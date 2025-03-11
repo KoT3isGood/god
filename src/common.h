@@ -11,4 +11,9 @@ time_t get_modification_time(const char *filename);
 /* Returns if file needs to be rebuilt. */
 int needs_rebuild(time_t, time_t);
 
+/*
+ * fix_filename() - fixes path string based on OS.
+ */
+char* fix_filename(char* filename);
+
 #endif

@@ -96,7 +96,6 @@ char* ld_link_project(struct project p, struct link_settings settings) {
                 strcat(libdirs,settings.lib_dirs[i]); 
                 i++;
         } while (settings.lib_dirs[i]);
-        printf("%s\n",libdirs);
 
 skip_libdirs:
 

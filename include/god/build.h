@@ -11,12 +11,24 @@ enum build_optimize {
         BUILD_OPTIMIZE_RELEASE_SIZE,
 };
 
+enum build_kernel {
+	BUILD_KERNEL_NONE,
+	BUILD_KERNEL_LINUX,
+	BUILD_KERNEL_WINDOWS,
+	BUILD_KERNEL_MACOS,
+};
+
+enum build_arch {
+	BUILD_ARCH_x86,
+	BUILD_ARCH_x86_64,
+};
+
 /*
- *
+ * Build data for projects.
  */
 struct build_data {
-        char* arch;
-        char* os;
+	enum build_kernel kernel; /* Operating system compiled for*/
+	enum build_arch arch; /**/
         enum build_optimize optimize;
 };
 
@@ -24,23 +36,20 @@ struct build_data {
 /*
  * Project metadata.
  * All it does is it prepares files to be built by compiler.
- * Compiler variable points on compiler to be used during the build. Can be NULL.
- * All installed files should be temporary if compile function doesn't provide
- * cache type.
+ * Compiler variable points on compiler to be used during the build.
+ * All files are stored in .god directory until they are moved out.
  */
 struct project {
         struct build_data* b;
         char* name;
         char* compiler;
-        /* Last file should be NULL */
-        char** files;
+	/* 
+	 * Compiled files
+	 * Last file should be null 
+	 */
+        char** files; 
 };
 
-/*
- * mv() - moves file or directory from source to destination.
- * dest and source should be valid strings
- */
-void mv(char* dest, char* source);
 
 
 #endif
