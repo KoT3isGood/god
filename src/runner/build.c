@@ -35,6 +35,8 @@ int build(int argc, char **argv) {
 	b.arch = BUILD_ARCH_x86_64;
 	b.kernel = BUILD_KERNEL_WINDOWS;
 	#endif
+	compilecounter=-1;
+	trace = 0;
 
 	struct project build_exe={};
 	build_exe.b=&b;

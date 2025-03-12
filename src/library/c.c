@@ -103,7 +103,7 @@ skip_include_files:
 
 	i=0;
 	if (compiler==NULL) {
-		compiler="gcc";
+		compiler="clang";
 	};
 	do {
 		i++;
@@ -114,7 +114,7 @@ skip_include_files:
 	build.files=malloc(sizeof(char*)*b);
 	memset(build.files,0,sizeof(char*)*b);
 
-	printf(TERMINAL_CYAN"Building %s\n"TERMINAL_RESET,p.name);
+	printf(TERMINAL_CYAN"Building %s"TERMINAL_RESET"\n",p.name);
 	do {
 		compilecounter++;
 		char* outputfile = string_clone(".god/o/%s.o",p.files[i],compilecounter);
@@ -133,7 +133,8 @@ skip_include_files:
 		time_t script_time=get_modification_time(outputfile);
 
 
-		char* command = string_clone("clang -g -fPIE -c %s%s%s -o %s", p.files[i], includeargs,includefiles, outputfile);
+		char* command = string_clone("%s -g -fPIE -c %s%s%s -o %s",compiler, p.files[i], includeargs,includefiles, outputfile);
+		if (trace) {
 		if (!(i%2)) 
 			printf(TERMINAL_YELLOW"  [%i/%i] %s"TERMINAL_RESET,i+1,numfiles,command);
 		else
@@ -146,6 +147,8 @@ skip_include_files:
 			printf(TERMINAL_BLUE" (cached)"TERMINAL_RESET"\n");
 
 		if (!needs) goto skip_build;
+		}
+
 
 		/* linux won't show colors */
 		#ifdef __linux__

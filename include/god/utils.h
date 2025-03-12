@@ -4,6 +4,7 @@
 
 extern int linkcounter;
 extern int compilecounter;
+extern char trace;
 
 
 
