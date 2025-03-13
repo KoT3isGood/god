@@ -36,7 +36,6 @@ int build(int argc, char **argv) {
 	b.kernel = BUILD_KERNEL_WINDOWS;
 	#endif
 	compilecounter=-1;
-	trace = 0;
 
 	struct project build_exe={};
 	build_exe.b=&b;
@@ -77,7 +76,6 @@ int build(int argc, char **argv) {
 	sett.libs=link_libraries;
 	sett.lib_dirs=link_dirs;
 	char* buildfile = ld_link_project(build_obj, sett);
-	mv(".god/build",buildfile);
 
 	int argsize = 0;
 
@@ -91,7 +89,14 @@ int build(int argc, char **argv) {
 	}
 	buildargs[argsize]=0;
 
+	#ifdef __linux__
 	const char* command = string_clone(".god/build %s\n",buildargs);
+	mv(".god/build",buildfile);
+	#endif
+	#ifdef __WIN64__
+	const char* command = string_clone(".god\\build.exe %s\n",buildargs);
+	mv(".god\\build.exe",buildfile);
+	#endif
 
 	system(command);
 

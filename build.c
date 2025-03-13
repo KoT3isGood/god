@@ -5,34 +5,8 @@
 #include "stddef.h"
 
 int build(struct build_data b) {
-        struct project god_exe={};
-        god_exe.b=&b;
-        god_exe.name="god";
-        char* god_exe_files[] = {
-                "src/runner/build.c",
-                "src/runner/help.c",
-                "src/runner/main.c",
-                "src/common.c",
-                NULL
-        };
-        god_exe.files=god_exe_files;
-        struct C_settings settings = {};
-        struct project god_obj = C_compile(god_exe,settings);
 
-        struct link_settings sett = {};
-        sett.type=LINK_TYPE_EXECUTABLE;
-        char* link_libraries[] = {
-                "c",
-		"god",
-                NULL,
-        };
-        char* link_dirs[] = {
-		"bin",
-		NULL,
-	};
-        sett.libs=link_libraries;
-        sett.lib_dirs=link_dirs;
-        char* exe = ld_link_project(god_obj, sett);
+        struct C_settings settings = {};
 
         struct project god_lib={};
         god_lib.b=&b;
@@ -56,8 +30,43 @@ int build(struct build_data b) {
         lib_sett.libs=lib_link_libraries;
         char* lib = ld_link_project(god_lib_obj, lib_sett);
 
-        mv("bin/god_test",exe);
-        mv("bin/libgod.a",lib);
+        mv("bin",lib);
+
+
+
+
+        struct project god_exe={};
+        god_exe.b=&b;
+        god_exe.name="god";
+        char* god_exe_files[] = {
+                "src/runner/build.c",
+                "src/runner/help.c",
+                "src/runner/main.c",
+                "src/common.c",
+                NULL
+        };
+        god_exe.files=god_exe_files;
+        struct project god_obj = C_compile(god_exe,settings);
+
+        struct link_settings sett = {};
+        sett.type=LINK_TYPE_EXECUTABLE;
+        char* link_libraries[] = {
+                "c",
+		"god",
+                NULL,
+        };
+        char* link_dirs[] = {
+		"bin",
+		NULL,
+	};
+        sett.libs=link_libraries;
+        sett.lib_dirs=link_dirs;
+        char* exe = ld_link_project(god_obj, sett);
+
+
+
+
+        mv("bin",exe);
         mv("bin/","include"); 
 
         return 0;

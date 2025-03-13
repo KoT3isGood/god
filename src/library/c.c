@@ -117,7 +117,23 @@ skip_include_files:
 	printf(TERMINAL_CYAN"Building %s"TERMINAL_RESET"\n",p.name);
 	do {
 		compilecounter++;
-		char* outputfile = string_clone(".god/o/%s.o",p.files[i],compilecounter);
+		char* outputfile;
+		char* kernel;
+		char* arch = "x86_64";
+		char* target;
+		if (p.b->kernel==BUILD_KERNEL_NONE) {
+			kernel = "none";
+		}
+		if (p.b->kernel==BUILD_KERNEL_LINUX) {
+			outputfile = string_clone(".god/o/%s.o",p.files[i],compilecounter);
+			kernel = "linux-gnu";
+
+		};
+		if (p.b->kernel==BUILD_KERNEL_WINDOWS) {
+			outputfile = string_clone(".god/o/%s.obj",p.files[i],compilecounter);
+			kernel = "windows-gnu";
+		};
+		target = string_clone("%s-%s",arch,kernel);
 		int j = 0;
 
 		fix_filename(outputfile);
@@ -133,7 +149,7 @@ skip_include_files:
 		time_t script_time=get_modification_time(outputfile);
 
 
-		char* command = string_clone("%s -g -fPIE -c %s%s%s -o %s",compiler, p.files[i], includeargs,includefiles, outputfile);
+		char* command = string_clone("%s -g -fPIE -c %s%s%s -target %s -o %s",compiler, p.files[i], includeargs,includefiles,target, outputfile);
 		if (trace) {
 		if (!(i%2)) 
 			printf(TERMINAL_YELLOW"  [%i/%i] %s"TERMINAL_RESET,i+1,numfiles,command);

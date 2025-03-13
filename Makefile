@@ -10,7 +10,7 @@ RUNNERFILES:=$(wildcard src/runner/*.c)
 LIBFILES:=$(wildcard src/library/*.c)
 LIBOBJFILES = $(LIBFILES:.c=.o)
 
-all: bin/ libgod.a buildrunner 
+all: bin/ buildrunner 
 	cp -r include/ bin/
 	rm -r .god
 
@@ -18,7 +18,7 @@ bin/:
 	mkdir -p .god
 	mkdir -p bin
 
-buildrunner: $(RUNNERFILES) $(COMMON)
+buildrunner: libgod.a $(RUNNERFILES) $(COMMON)
 	$(CC) $(RUNNERFILES) $(COMMON) -g -o bin/god -Lbin -lgod
 
 src/library/%.o: src/library/%.c
@@ -31,5 +31,4 @@ libgod.a: $(LIBOBJFILES) src/common.o
 	$(AR) rcs bin/libgod.a $(LIBOBJFILES) src/common.o
 
 clean:
-	rm -rf $(LIBOBJFILES) .god bin
 	find . -name "*.o" | xargs rm
