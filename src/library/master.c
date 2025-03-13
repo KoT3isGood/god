@@ -14,7 +14,5 @@ void mv(char* dest, char* source) {
 	#ifdef __linux__
 	char* command = string_clone("cp -r %s %s",source,dest);
 	#endif
-	printf("cool\n");
 	system(command);
-	printf("cool\n");
 };
