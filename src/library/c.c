@@ -25,6 +25,7 @@ struct project C_compile(struct project p, struct C_settings settings) {
 	int i = 0;
 
 	int num_files = 0;
+	compilecounter++;
 
 	/* Basic checks for libraries */
 

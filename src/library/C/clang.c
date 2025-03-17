@@ -15,11 +15,11 @@ char* clang_compile(char* file, struct project p, struct C_settings settings) {
 	char* outputdir = NULL;
 	char* target = NULL;
 	if(p.b->kernel==BUILD_KERNEL_LINUX) {
-		outputfile = string_clone(".god/o/%s.o",file);
+		outputfile = string_clone(".god/o/%i/%s.o",compilecounter,file);
 		target=string_clone("x86_64-pc-linux-gnu");
 	}
 	if(p.b->kernel==BUILD_KERNEL_WINDOWS) {
-		outputfile = string_clone(".god/o/%s.obj",file);
+		outputfile = string_clone(".god/o/%i/%s.obj",compilecounter,file);
 		target=string_clone("x86_64-pc-win32-gnu");
 	}
 	fix_filename(outputfile);

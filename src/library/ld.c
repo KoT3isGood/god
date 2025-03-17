@@ -63,24 +63,45 @@ char* ld_link_project(struct project p, struct link_settings settings) {
 	if (settings.type==LINK_TYPE_EXECUTABLE||settings.type==LINK_TYPE_DYNAMIC) {
 		char* outputfile=NULL;
 		char* linker;
-		switch (p.b->kernel) {
-		case BUILD_KERNEL_LINUX:
-			outputfile=string_clone(".god/bin/%i/%s",linkcounter,p.name);
-			linker="g++";
-			break;
-		case BUILD_KERNEL_WINDOWS:
-			outputfile=string_clone(".god/bin/%i/%s.exe",linkcounter,p.name);
-			linker="x86_64-w64-mingw32-g++";
-			break;
-		default:
-			break;
+		if (settings.type==LINK_TYPE_EXECUTABLE) {
+			switch (p.b->kernel) {
+			case BUILD_KERNEL_LINUX:
+				outputfile=string_clone(".god/bin/%i/%s",linkcounter,p.name);
+				linker="g++";
+				break;
+			case BUILD_KERNEL_WINDOWS:
+				outputfile=string_clone(".god/bin/%i/%s.exe",linkcounter,p.name);
+				linker="x86_64-w64-mingw32-g++";
+				break;
+			default:
+				break;
+			}
 		}
+		if (settings.type==LINK_TYPE_DYNAMIC) {
+			switch (p.b->kernel) {
+			case BUILD_KERNEL_LINUX:
+				outputfile=string_clone(".god/lib/%i/lib%s.so",linkcounter,p.name);
+				linker="g++";
+				break;
+			case BUILD_KERNEL_WINDOWS:
+				outputfile=string_clone(".god/lib/%i/%s.dll",linkcounter,p.name);
+				linker="x86_64-w64-mingw32-g++";
+				break;
+			default:
+				break;
+			}
+		}
+
 		struct run_project run = run_new(linker);
 		run_add_arg(&run, "-o");
 		run_add_arg(&run, outputfile);
-		char* outputdir=string_clone(".god/bin/%i",linkcounter);
-		makedir(outputdir);
+		if (settings.type==LINK_TYPE_EXECUTABLE) {
+			char* outputdir=string_clone(".god/bin/%i",linkcounter);
+			makedir(outputdir);
+		}
 		if (settings.type==LINK_TYPE_DYNAMIC) {
+			char* outputdir=string_clone(".god/lib/%i",linkcounter);
+			makedir(outputdir);
 			run_add_arg(&run, "-shared");
 		}
 		int i = 0;

@@ -36,6 +36,7 @@ int build(int argc, char **argv) {
 	b.kernel = BUILD_KERNEL_WINDOWS;
 	#endif
 	compilecounter=-1;
+	linkcounter=-1;
 
 	struct project build_exe={};
 	build_exe.b=&b;
