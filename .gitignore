@@ -2,3 +2,4 @@
 .god/
 bin/
 *.o
+.vscode

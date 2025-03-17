@@ -8,6 +8,7 @@ LD=ld
 COMMON:=$(wildcard src/*.c)
 RUNNERFILES:=$(wildcard src/runner/*.c)
 LIBFILES:=$(wildcard src/library/*.c)
+LIBFILES+=$(wildcard src/library/C/*.c)
 LIBOBJFILES = $(LIBFILES:.c=.o)
 
 all: bin/ buildrunner 

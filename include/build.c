@@ -21,7 +21,6 @@ int main(int argc, char **argv) {
                 {0,0,0,0}
         };    
         int opt;
-					printf("windows cool\n");
         int option_index;
         while ((opt = getopt_long(argc, argv, "h", options, &option_index)) != -1) {
                 if (opt == 0) {

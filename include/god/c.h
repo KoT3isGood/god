@@ -8,9 +8,6 @@
 #define C_COMPILE_FLAGS_NOSTDINC 0x1
 #define C_COMPILE_FLAGS_FREESTANDING 0x2
 
-/* Generation flags provide additional utilities*/
-#define C_GENERATION_FLAGS_CLANGD 0x1
-
 struct C_settings {
         char** include_dirs;
         char** include_files;

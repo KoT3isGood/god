@@ -12,6 +12,7 @@ int build(struct build_data b) {
         god_lib.b=&b;
         god_lib.name="god";
         char* god_lib_files[] = {
+                "src/library/C/clang.c",
                 "src/library/c.c",
                 "src/library/ld.c",
                 "src/library/master.c",
@@ -37,7 +38,7 @@ int build(struct build_data b) {
 
         struct project god_exe={};
         god_exe.b=&b;
-        god_exe.name="god";
+        god_exe.name="god_test";
         char* god_exe_files[] = {
                 "src/runner/build.c",
                 "src/runner/help.c",

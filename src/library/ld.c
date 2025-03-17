@@ -5,6 +5,7 @@
 #include "../../include/god/ld.h"
 #include "../../include/god/utils.h"
 #include "../common.h"
+#include <complex.h>
 
 
 #define TERMINAL_RED "\x1B[31m"
@@ -112,6 +113,7 @@ skip_libdirs:
 	argsize=0;
 	i=0;
 	do {
+		if (settings.libs[i]==(void*)1) {i++;continue;};
 		if (p.b->kernel==BUILD_KERNEL_WINDOWS) {
 			if (!strcmp(settings.libs[i],"c"))  {
 				libcpresent=1;
@@ -120,9 +122,6 @@ skip_libdirs:
 			};
 		}
 		argsize+=strlen(settings.libs[i])+3;
-		if (p.b->kernel==BUILD_KERNEL_WINDOWS) {
-		argsize+=5;
-		}
 		i++;
 	} while (settings.libs[i]);
 	i = 0;
@@ -131,6 +130,7 @@ skip_libdirs:
 	memset(libs,0,argsize);
 
 	do {
+		if (settings.libs[i]==(void*)1) {i++;continue;};
 		if (p.b->kernel==BUILD_KERNEL_WINDOWS) {
 			if (!strcmp(settings.libs[i],"c")) {
 				i++;
@@ -138,13 +138,7 @@ skip_libdirs:
 			};
 		}
 		strcat(libs," -l"); 
-		if (p.b->kernel==BUILD_KERNEL_WINDOWS) {
-		strcat(libs,":"); 
-		}
 		strcat(libs,settings.libs[i]); 
-		if (p.b->kernel==BUILD_KERNEL_WINDOWS) {
-		strcat(libs,".lib");
-		} 
 		i++;
 	} while (settings.libs[i]);
 
@@ -164,22 +158,24 @@ skip_libs:
 			outputfile=string_clone(".god/bin/%i/%s",linkcounter,p.name);
 			break;
 		case BUILD_KERNEL_WINDOWS:
-			outputfile=string_clone(".god\\bin\\%i\\%s.exe",linkcounter,p.name);
+			outputfile=string_clone(".god/bin/%i/%s.exe",linkcounter,p.name);
 			break;
 		}
+		fix_filename(outputfile);
 		char* command = NULL;
 		if (settings.linker==NULL) goto ld_default_link;
 
 		if (!strcmp(settings.linker,"g++")) {
+			ld_default_link:
 			switch (p.b->kernel) {
-			case BUILD_KERNEL_LINUX:
+			case BUILD_KERNEL_WINDOWS:
 				command=string_clone(
-					"x86_64-w64-mingw32-g++ " 
+					"x86_64-w64-mingw32-g++ -static-libgcc -static-libstdc++ -static " 
 					"%s"
 					"%s%s "
 					"-o %s",args,libdirs,libs,outputfile);
 				break;
-			case BUILD_KERNEL_WINDOWS:
+			case BUILD_KERNEL_LINUX:
 				command=string_clone(
 					"g++ " 
 					"%s"
@@ -190,25 +186,6 @@ skip_libs:
 				printf("not implemented4\n");
 			}
 			goto ld_link;
-		}
-ld_default_link:
-		switch (p.b->kernel) {
-		case BUILD_KERNEL_LINUX:
-			command=string_clone(
-				"g++ " 
-				"%s"
-				"%s%s "
-				"-o %s",args,libdirs,libs,outputfile);
-			break;
-		case BUILD_KERNEL_WINDOWS:
-			command=string_clone(
-				"x86_64-w64-mingw32-g++ " 
-				"%s"
-				"%s%s %s "
-				"-o %s",args,libdirs,libs,libccancel,outputfile);
-			break;
-		default:
-			printf("not implemented3\n");
 		}
 ld_link:
 		if (trace) {
@@ -236,6 +213,7 @@ ld_link:
 		default:
 			printf("not implemented2\n");
 		}
+		fix_filename(outputfile);
 		char* command=string_clone(
 			"ar rcs %s %s",outputfile,args
 		);
@@ -247,6 +225,75 @@ ld_link:
 		char* realcommand = string_clone("mkdir -p .god/lib/%i && %s",linkcounter,command);
 		#endif
 		system(realcommand);
+		return outputfile;
+	}
+	if (settings.type==LINK_TYPE_DYNAMIC) {
+		char* outputfile;
+		
+		switch (p.b->kernel) {
+		case BUILD_KERNEL_LINUX:
+			outputfile=string_clone(".god/lib/%i/%s.so",linkcounter,p.name);
+			break;
+		case BUILD_KERNEL_WINDOWS:
+			outputfile=string_clone(".god/lib/%i/%s.dll",linkcounter,p.name);
+			break;
+		}
+		fix_filename(outputfile);
+		char* command = NULL;
+		if (settings.linker==NULL) goto ld_default_link_so;
+
+		if (!strcmp(settings.linker,"g++")) {
+			switch (p.b->kernel) {
+			case BUILD_KERNEL_LINUX:
+				command=string_clone(
+					"x86_64-w64-mingw32-g++ -shared " 
+					"%s"
+					"%s%s "
+					"-o %s",args,libdirs,libs,outputfile);
+				break;
+			case BUILD_KERNEL_WINDOWS:
+				command=string_clone(
+					"g++ -shared " 
+					"%s"
+					"%s%s "
+					"-o %s",args,libdirs,libs,outputfile);
+				break;
+			default:
+				printf("not implemented4\n");
+			}
+			goto ld_link;
+		}
+ld_default_link_so:
+		switch (p.b->kernel) {
+		case BUILD_KERNEL_LINUX:
+			command=string_clone(
+				"g++ -shared " 
+				"%s"
+				"%s%s "
+				"-o %s",args,libdirs,libs,outputfile);
+			break;
+		case BUILD_KERNEL_WINDOWS:
+			command=string_clone(
+				"x86_64-w64-mingw32-g++ -shared " 
+				"%s"
+				"%s%s %s "
+				"-o %s",args,libdirs,libs,libccancel,outputfile);
+			break;
+		default:
+			printf("not implemented3\n");
+		}
+ld_link_so:
+		if (trace) {
+		      printf("%s\n",command);
+		}
+		#ifdef __WIN64__
+		char* realcommand = string_clone("if not exist .god\\lib\\%i mkdir .god\\lib\\%i\n%s",linkcounter,linkcounter,command);
+		#endif
+		#ifdef __linux__
+		char* realcommand = string_clone("mkdir -p .god/lib/%i && %s",linkcounter,command);
+		#endif
+		system(realcommand);
+
 		return outputfile;
 	}
 	return NULL;

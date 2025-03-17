@@ -7,28 +7,17 @@
 #include "../common.h"
 
 
-#define TERMINAL_RED "\x1B[31m"
-#define TERMINAL_GREEN "\x1B[32m"
-#define TERMINAL_YELLOW "\x1B[33m"
-#define TERMINAL_BLUE "\x1B[34m"
-#define TERMINAL_MAGENTA "\x1B[35m"
-#define TERMINAL_CYAN "\x1B[36m"
-#define TERMINAL_WHITE "\x1B[37m"
-#define TERMINAL_RESET "\x1B[0m"
-
-
+char* clang_compile(char* file, struct project p, struct C_settings settings);
+char* gcc_compile(char* file, struct project p, struct C_settings settings);
+char* msvc_compile(char* file, struct project p, struct C_settings settings);
 
 struct project C_compile(struct project p, struct C_settings settings) {
 
 	char* compiler = p.compiler;
-	char* compilecommand = NULL;
-	char* includeargs = NULL;
-	char* includefiles = NULL;
 	struct project build = {};
 	int i = 0;
-	int b = 0;
-	int numfiles=0;
-	int argsize=0;
+
+	int num_files = 0;
 
 	/* Basic checks for libraries */
 
@@ -43,7 +32,6 @@ struct project C_compile(struct project p, struct C_settings settings) {
 		return (struct project){};
 	};
 	if (p.files==NULL) {
-
 		printf(
 			"C_compile: "
 			TERMINAL_RED 
@@ -53,132 +41,26 @@ struct project C_compile(struct project p, struct C_settings settings) {
 			);
 		return (struct project){};
 	};
+	printf(TERMINAL_CYAN"Building %s"TERMINAL_RESET"\n",p.name);
 
-	/* Includes*/
-	i=0;
-	if (settings.include_dirs==NULL) {
-		includeargs="";
-		goto skip_include;
-	}
-
-	do {
-		argsize+=strlen(settings.include_dirs[i])+3;
-		i++;
-	} while (settings.include_dirs[i]);
-	argsize+=1;
-	includeargs = malloc(argsize);
-	memset(includeargs,0,argsize);
-
-	i=0;
-	do {
-	       strcat(includeargs," -I"); 
-	       strcat(includeargs,settings.include_dirs[i]); 
-	       i++;
-	} while (settings.include_dirs[i]);
-	argsize=0;
-skip_include:
-	/* Include files*/
-	i=0;
-	if (settings.include_files==NULL) {
-		includefiles="";
-		goto skip_include_files;
-	}
-
-	do {
-		argsize+=strlen(settings.include_files[i])+10;
-		i++;
-	} while (settings.include_files[i]);
-	argsize+=1;
-	includefiles = malloc(argsize);
-	memset(includefiles,0,argsize);
-
-	i=0;
-	do {
-	       strcat(includefiles," --include="); 
-	       strcat(includefiles,settings.include_files[i]); 
-	       i++;
-	} while (settings.include_files[i]);
-	argsize=0;
-skip_include_files:
-
-	i=0;
 	if (compiler==NULL) {
 		compiler="clang";
-	};
+	}
+
 	do {
 		i++;
 	} while (p.files[i]);
-	numfiles=i;
-	b=i+1;
+	num_files=i;
+	build.files=malloc(sizeof(char**)*(num_files+1));
 	i=0;
-	build.files=malloc(sizeof(char*)*b);
-	memset(build.files,0,sizeof(char*)*b);
-
-	printf(TERMINAL_CYAN"Building %s"TERMINAL_RESET"\n",p.name);
+	
 	do {
-		compilecounter++;
-		char* outputfile;
-		char* kernel;
-		char* arch = "x86_64";
-		char* target;
-		if (p.b->kernel==BUILD_KERNEL_NONE) {
-			kernel = "none";
+		printf(TERMINAL_YELLOW"  [%i/%i] %s "TERMINAL_RESET,i+1, num_files, p.files[i]);
+		if (!strcmp(compiler,"clang")) {
+			char* file = clang_compile(p.files[i], p, settings);
+			build.files[i]=file;
 		}
-		if (p.b->kernel==BUILD_KERNEL_LINUX) {
-			outputfile = string_clone(".god/o/%s.o",p.files[i],compilecounter);
-			kernel = "linux-gnu";
-
-		};
-		if (p.b->kernel==BUILD_KERNEL_WINDOWS) {
-			outputfile = string_clone(".god/o/%s.obj",p.files[i],compilecounter);
-			kernel = "windows-gnu";
-		};
-		target = string_clone("%s-%s",arch,kernel);
-		int j = 0;
-
-		fix_filename(outputfile);
-
-
-		/* dirname() modifies string instead of allocating new one. */
-		char* outputfile2 = string_clone(outputfile);
-		char* outputdir = dirname(outputfile2);
-
-		/* Prevent useful execution time */
-		build.files[i]=outputfile;
-		time_t source_time=get_modification_time(p.files[i]);
-		time_t script_time=get_modification_time(outputfile);
-
-
-		char* command = string_clone("%s -g -fPIE -c %s%s%s -target %s -o %s",compiler, p.files[i], includeargs,includefiles,target, outputfile);
-		if (trace) {
-		if (!(i%2)) 
-			printf(TERMINAL_YELLOW"  [%i/%i] %s"TERMINAL_RESET,i+1,numfiles,command);
-		else
-			printf(TERMINAL_WHITE"  [%i/%i] %s"TERMINAL_RESET,i+1,numfiles,command);
-
-		int needs = needs_rebuild(script_time, source_time);
-		if (needs)
-			printf("\n");
-		else
-			printf(TERMINAL_BLUE" (cached)"TERMINAL_RESET"\n");
-
-		if (!needs) goto skip_build;
-		}
-
-
-		/* linux won't show colors */
-		#ifdef __linux__
-		char* term = getenv("TERM");
-		char* cmd = string_clone("export TERM=%s && mkdir -p %s && %s",term,outputdir,command);
-		system(cmd);
-		#endif
-
-		/* windows isn't posix, too bad */
-		#ifdef __WIN64__
-		char* cmd = string_clone("if not exist %s mkdir %s\n%s",outputdir,outputdir,command);
-		system(cmd);
-		#endif
-	skip_build:
+		printf("\n");
 		i++;
 	} while (p.files[i]);
 
