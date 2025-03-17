@@ -1,8 +1,10 @@
 #include "god/build.h"
+#include "god/c.h"
 #include "getopt.h"
 #include "stddef.h"
 #include "string.h"
 #include "stdio.h"
+#include "unistd.h"
 
 
 
@@ -59,5 +61,33 @@ int main(int argc, char **argv) {
                 }
         }
 
-        return build(b);
+	fclose(fopen("compile_commands.json","wb"));
+	char cwd[1024];
+	getcwd(cwd, sizeof(cwd));
+	cdb = fopen("compile_commands.json","ab");
+	char* f = string_clone("%s",__FILE__);
+	int len = strlen(f);
+	f[len-8]=0;
+	fprintf(cdb,
+		"[\n"
+		"\t{\n"
+		"\t\t\"arguments\": [\n"
+		"\t\t\t\"clang\",\n"
+		"\t\t\t\"build.c\",\n"
+		"\t\t\t\"--include\",\n"
+		"\t\t\t\""__FILE__"\",\n"
+		"\t\t\t\"-I%s\"\n"
+		"\t\t],\n"
+		"\t\t\"file\":\"build.c\",\n"
+		"\t\t\"directory\":\"%s\"\n"
+		"\t}",
+		f,
+		cwd
+	);
+
+
+        int r = build(b);
+	fprintf(cdb,"\n]");
+	fclose(cdb);
+	return r;
 }

@@ -3,6 +3,7 @@
 #define _GOD_C_H
 #include "build.h"
 #include "stdint.h"
+#include "stdio.h"
 
 /* Compile flags define how the object should be generated. */
 #define C_COMPILE_FLAGS_NOSTDINC 0x1
@@ -23,14 +24,7 @@ struct C_settings {
  */
 struct project C_compile(struct project p, struct C_settings settings);
 
-
-/*
- * C_generate_lsp() - generates language servers configuration files for all 
- * files mentioned in C_compile();
- * 
- * It does not care about file timestamps as it updates whenever build system 
- * file gets updated. 
- */
-void C_generate_lsp();
+/* holy shit triple star */
+extern FILE* cdb;
 
 #endif

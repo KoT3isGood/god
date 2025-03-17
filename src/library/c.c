@@ -11,8 +11,15 @@ char* clang_compile(char* file, struct project p, struct C_settings settings);
 char* gcc_compile(char* file, struct project p, struct C_settings settings);
 char* msvc_compile(char* file, struct project p, struct C_settings settings);
 
+const char* C_buildcargs[] = {
+	"clang",
+	"build.c",
+	"--include",
+	NULL,
+	NULL,
+};
+FILE* cdb;
 struct project C_compile(struct project p, struct C_settings settings) {
-
 	char* compiler = p.compiler;
 	struct project build = {};
 	int i = 0;
@@ -53,7 +60,6 @@ struct project C_compile(struct project p, struct C_settings settings) {
 	num_files=i;
 	build.files=malloc(sizeof(char**)*(num_files+1));
 	i=0;
-	
 	do {
 		printf(TERMINAL_YELLOW"  [%i/%i] %s "TERMINAL_RESET,i+1, num_files, p.files[i]);
 		if (!strcmp(compiler,"clang")) {
@@ -66,6 +72,7 @@ struct project C_compile(struct project p, struct C_settings settings) {
 
 	build.b=p.b;
 	build.name=p.name;
+	
 
 
 	return build;

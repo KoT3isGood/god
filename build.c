@@ -1,7 +1,7 @@
-#include "include/god/build.h"
-#include "include/god/c.h"
-#include "include/god/ld.h"
-#include "include/god/utils.h"
+#include "god/build.h"
+#include "god/c.h"
+#include "god/ld.h"
+#include "god/utils.h"
 #include "stddef.h"
 
 int build(struct build_data b) {
