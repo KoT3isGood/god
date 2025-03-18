@@ -3,10 +3,17 @@
 #include "god/ld.h"
 #include "god/utils.h"
 #include "stddef.h"
+#include "stdio.h"
 
 int build(struct build_data b) {
 
+	char* includedirs[] = {
+		"include",
+		NULL,
+	};
+
         struct C_settings settings = {};
+	settings.include_dirs=includedirs;
 
         struct project god_lib={};
         god_lib.b=&b;
@@ -16,6 +23,7 @@ int build(struct build_data b) {
                 "src/library/c.c",
                 "src/library/ld.c",
                 "src/library/master.c",
+                "src/library/windres.c",
                 "src/common.c",
                 NULL,
         };

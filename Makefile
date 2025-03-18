@@ -20,13 +20,13 @@ bin/:
 	mkdir -p bin
 
 buildrunner: libgod.a $(RUNNERFILES) $(COMMON)
-	$(CC) $(RUNNERFILES) $(COMMON) -g -o bin/god -Lbin -lgod
+	$(CC) $(RUNNERFILES) $(COMMON) -g -o bin/god -Lbin -lgod -Iinclude
 
 src/library/%.o: src/library/%.c
-	$(CC) -c $< -g -o $@
+	$(CC) -c $< -g -o $@ -Iinclude
 
 src/common.o:
-	$(CC) -c src/common.c -g -o src/common.o
+	$(CC) -c src/common.c -g -o src/common.o -Iinclude
 
 libgod.a: $(LIBOBJFILES) src/common.o
 	$(AR) rcs bin/libgod.a $(LIBOBJFILES) src/common.o

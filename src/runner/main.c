@@ -1,6 +1,6 @@
 #include "stdio.h"
 #include "getopt.h"
-#include "../common.h"
+#include "god/common.h"
 #include "string.h"
 #include "commands.h"
 

@@ -2,9 +2,9 @@
 #include "stdio.h"
 #include "string.h"
 #include "libgen.h"
-#include "../../include/god/ld.h"
-#include "../../include/god/utils.h"
-#include "../common.h"
+#include "god/ld.h"
+#include "god/utils.h"
+#include "god/common.h"
 #include <complex.h>
 
 

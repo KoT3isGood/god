@@ -2,7 +2,7 @@
 #include "stdarg.h"
 #include "stdio.h"
 #include "stdlib.h"
-#include "common.h"
+#include "god/common.h"
 #include "sys/stat.h"
 
 char *string_clone(const char *str,...) {

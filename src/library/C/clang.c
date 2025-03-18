@@ -1,7 +1,7 @@
-#include "../../../include/god/utils.h"
-#include "../../../include/god/c.h"
-#include "../../../include/god/build.h"
-#include "../../common.h"
+#include "god/utils.h"
+#include "god/c.h"
+#include "god/build.h"
+#include "god/common.h"
 #include "stdlib.h"
 #include "stdio.h"
 #include "libgen.h"
@@ -52,8 +52,8 @@ char* clang_compile(char* file, struct project p, struct C_settings settings) {
 
 	if (!settings.include_dirs) goto include_dirs;
 	do {
-		char* file=string_clone("-I%s",settings.include_dirs[i]);
-		run_add_arg(&run, file);
+		char* dir=string_clone("-I%s",settings.include_dirs[i]);
+		run_add_arg(&run, dir);
 		i++;
 	} while (settings.include_dirs[i]);
 include_dirs:

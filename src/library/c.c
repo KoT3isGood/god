@@ -2,9 +2,9 @@
 #include "stdio.h"
 #include "string.h"
 #include "libgen.h"
-#include "../../include/god/c.h"
-#include "../../include/god/utils.h"
-#include "../common.h"
+#include "god/c.h"
+#include "god/utils.h"
+#include "god/common.h"
 
 
 char* clang_compile(char* file, struct project p, struct C_settings settings);

@@ -8,11 +8,11 @@
 #include "windows.h"
 #endif
 #include "libgen.h"
-#include "../common.h"
-#include "../../include/god/utils.h"
-#include "../../include/god/build.h"
-#include "../../include/god/c.h"
-#include "../../include/god/ld.h"
+#include "god/common.h"
+#include "god/utils.h"
+#include "god/build.h"
+#include "god/c.h"
+#include "god/ld.h"
 
 int build(int argc, char **argv) {
 	char appdir[1024];

@@ -1,5 +1,5 @@
-#include "../../include/god/utils.h"
-#include "../common.h"
+#include "god/utils.h"
+#include "god/common.h"
 #include "stdlib.h"
 #include "stdio.h"
 #include "unistd.h"
@@ -45,10 +45,37 @@ void run_add_arg(struct run_project* project, char* arg) {
 
 void run_run(struct run_project* project) {
 
-	pid_t pid = fork(); 
+	if (trace) {
+		int i = 0;
+		do {
+			printf("%s ",project->args[i]);
+			i++;
+		} while(project->args[i]);
+		printf("\n");
+	}
+
+	pid_t pid = fork();
 	if (pid == 0) {
-		execvp(project->executable, project->args);
+		if (project->wd) {
+			char wd[1024];
+			getcwd(wd,1024);
+			char* w = string_clone("%s/%s",wd,project->wd);
+			int a=chdir(w);
+			printf("%s\n",w);
+		}
+		int a = execvp(project->executable, project->args);
+		printf("%i\n",a);
 	};
 	wait(NULL);
 
+};
+
+void add_item(char** list, char* item) {
+	int i = 0;
+	do {
+		i++;
+	} while(list[i]);
+	list=realloc(list,sizeof(char*)*(i+2));
+	list[i]=item;
+	list[i+1]=NULL;
 };
