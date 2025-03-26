@@ -93,6 +93,7 @@ char* ld_link_project(struct project p, struct link_settings settings) {
 		}
 
 		struct run_project run = run_new(linker);
+		run_add_arg(&run, "-g");
 		run_add_arg(&run, "-o");
 		run_add_arg(&run, outputfile);
 		if (settings.type==LINK_TYPE_EXECUTABLE) {

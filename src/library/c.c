@@ -67,6 +67,12 @@ struct project C_compile(struct project p, struct C_settings settings) {
 			char* file = clang_compile(p.files[i], p, settings);
 			build.files[i]=file;
 		}
+		#ifndef minimalcc
+		if (!strcmp(compiler,"gcc")) {
+			char* file = gcc_compile(p.files[i], p, settings);
+			build.files[i]=file;
+		}
+		#endif
 		printf("\n");
 		i++;
 	} while (p.files[i]);

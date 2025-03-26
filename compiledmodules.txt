@@ -1,0 +1,13 @@
+/*
+ * pretty much database of compiled modules, make sure to modify this when you
+ * add new module to the project.
+ * after that rebuild the whole thing
+ *
+ * MODULE(name) - creates new module, can have submodules
+ */
+
+MODULE(c, caller)
+	SUB(c, clang)
+	SUB(c, gcc)
+MODULE(ld, compiler)
+MODULE(windres, compiler)

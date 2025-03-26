@@ -1,3 +1,4 @@
+
 #include "god/utils.h"
 #include "god/c.h"
 #include "god/build.h"
@@ -7,7 +8,7 @@
 #include "libgen.h"
 #include "unistd.h"
 extern FILE* cdb;
-char* clang_compile(char* file, struct project p, struct C_settings settings) {
+char* gcc_compile(char* file, struct project p, struct C_settings settings) {
 
 	int i = 0;
 	struct run_project run;
@@ -16,11 +17,11 @@ char* clang_compile(char* file, struct project p, struct C_settings settings) {
 	char* target = NULL;
 	if(p.b->kernel==BUILD_KERNEL_LINUX) {
 		outputfile = string_clone(".god/o/%i/%s.o",compilecounter,file);
-		target=string_clone("x86_64-pc-linux-gnu");
+		run = run_new("gcc");
 	}
 	if(p.b->kernel==BUILD_KERNEL_WINDOWS) {
 		outputfile = string_clone(".god/o/%i/%s.obj",compilecounter,file);
-		target=string_clone("x86_64-pc-win32-gnu");
+		run = run_new("x86_64-w64-mingw32-gcc");
 	}
 	fix_filename(outputfile);
 	fix_filename(file);
@@ -33,16 +34,12 @@ char* clang_compile(char* file, struct project p, struct C_settings settings) {
 		return outputfile;
 	}
 	build:
-	run = run_new("clang");
 
 	run_add_arg(&run, "-g");
 	run_add_arg(&run, "-c");
 	run_add_arg(&run, "-fPIC");
 	run_add_arg(&run, "-fPIE");
-	run_add_arg(&run, "-target");
-	run_add_arg(&run, target);
-
-
+	run_add_arg(&run, "-Wno-incompatible-pointer-types");
 
 	outputdir=string_clone("%s",outputfile);
 	dirname(outputdir);

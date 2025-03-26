@@ -1,0 +1,50 @@
+god release 0.01
+
+		1. Short intro
+
+This is open-source build system for building user-space applications.  Full
+source code is included, and it has been used to build itself (quite an
+achivement tbh).  There is cross-compilation, few compilers, notably both clang
+and gcc and windres generation.  You need make, clang and ar to compile it, but
+sadly it can't be ran on windows as it has quite a lot of hardcoded stuff which
+I tried to fix but failed.
+
+As the version number (0.01) suggests it is just a thing for a single project
+which may not be used in others.  It only supports a small subset of compilers
+and runners, so don't expect it to compile whole linux kernel, but a game can
+be compiled easily.
+
+Software you need to run god:
+	- linux (wsl also works)
+	- clang
+	- gcc/g++ (mingw version for windows)
+	- ar
+
+x86_64 is hardcoded as I don't develop stuff on other achitecture. If somebody
+is willing to port the runner and build system on other architecture you are
+allowed to. If you get it running on windows without wsl do pull request as fast
+as possible.
+		2. License
+
+Copyright 2025 kotofyt
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this 
+list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, 
+this list of conditions and the following disclaimer in the documentation and/or 
+other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

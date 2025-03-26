@@ -13,10 +13,26 @@
 #include "god/build.h"
 #include "god/c.h"
 #include "god/ld.h"
+#include "unistd.h"
 
 int build(int argc, char **argv) {
-	char appdir[1024];
+	/* traverse cwd down the files until we find build.c */
+	#ifdef __linux__
+	char buildwd[1024];
+	getcwd(buildwd,1024);
+	while (strcmp("/",buildwd)) {
+		chdir(buildwd);
+		FILE* buildc = fopen("build.c", "r");
+		if (buildc) {
+			fclose(buildc);
+			break;
+		};
+		dirname(buildwd);
+	}
+	#endif
 
+
+	char appdir[1024];
 	struct build_data b;
 	#ifdef __linux__
 	ssize_t len = readlink("/proc/self/exe", appdir, sizeof(appdir) - 1);

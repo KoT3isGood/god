@@ -7,7 +7,7 @@
 
 int linkcounter = 0;
 int compilecounter = 0;
-char trace = 1;
+char trace = 0;
 void mv(char* dest, char* source) {
 	#ifdef __WIN64__
 
@@ -61,12 +61,17 @@ void run_run(struct run_project* project) {
 			getcwd(wd,1024);
 			char* w = string_clone("%s/%s",wd,project->wd);
 			int a=chdir(w);
-			printf("%s\n",w);
 		}
 		int a = execvp(project->executable, project->args);
-		printf("%i\n",a);
 	};
-	wait(NULL);
+	int status;
+	waitpid(pid,&status,0);
+	if (WIFEXITED(status)) {
+		if (status>127) {
+			printf("\nfailure %d\n",status);
+			exit(status);
+		}
+	}
 
 };
 

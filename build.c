@@ -7,6 +7,7 @@
 
 int build(struct build_data b) {
 
+        mv("compiledmodules.txt","modules.txt"); 
 	char* includedirs[] = {
 		"include",
 		NULL,
@@ -18,12 +19,11 @@ int build(struct build_data b) {
         struct project god_lib={};
         god_lib.b=&b;
         god_lib.name="god";
+	#define MODULE(x, s) "src/library/" #x ".c",
+	#define SUB(a, x) "src/library/" #a "/" #x ".c",
         char* god_lib_files[] = {
-                "src/library/C/clang.c",
-                "src/library/c.c",
-                "src/library/ld.c",
+		#include "modules.txt"
                 "src/library/master.c",
-                "src/library/windres.c",
                 "src/common.c",
                 NULL,
         };
@@ -46,7 +46,7 @@ int build(struct build_data b) {
 
         struct project god_exe={};
         god_exe.b=&b;
-        god_exe.name="god_test";
+        god_exe.name="god_staging";
         char* god_exe_files[] = {
                 "src/runner/build.c",
                 "src/runner/help.c",
