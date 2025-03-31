@@ -44,6 +44,30 @@ char* clang_compile(char* file, struct project p, struct C_settings settings) {
 	run_add_arg(&run, "-fPIE");
 	run_add_arg(&run, "-target");
 	run_add_arg(&run, target);
+	switch (settings.version) {
+	case C_VERSION_C89:
+		run_add_arg(&run, "-std=c89");
+		run_add_arg(&run, "-Wall");
+		run_add_arg(&run, "-pedantic");
+		break;
+	case C_VERSION_C99:
+		run_add_arg(&run, "-std=c99");
+		break;
+	case C_VERSION_C11:
+		run_add_arg(&run, "-std=c11");
+		break;
+	case C_VERSION_C17:
+		run_add_arg(&run, "-std=c17");
+		break;
+	case C_VERSION_C23:
+		run_add_arg(&run, "-std=c23");
+		break;
+	case C_VERSION_C2Y:
+		run_add_arg(&run, "-std=c2y");
+		break;
+	default:
+		break;
+	}
 
 
 

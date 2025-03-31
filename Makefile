@@ -30,7 +30,7 @@ bin/:
 
 compiledmodules:
 	touch compiledmodules.txt
-	echo "MODULE(c) SUB(c, clang) MODULE(ld)" > compiledmodules.txt
+	echo "MODULE(c, compiler) SUB(c, clang) MODULE(ld, compiler)" > compiledmodules.txt
 
 minimal: compiledmodules bin/ buildrunner
 	cp -r include/ bin/
