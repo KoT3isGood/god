@@ -5,13 +5,19 @@
 #include "stdint.h"
 #include "stdio.h"
 
-/* Compile flags define how the object should be generated. */
-#define C_COMPILE_FLAGS_NOSTDINC 1
-#define C_COMPILE_FLAGS_FREESTANDING 2
+#define C_COMPILE_FLAGS_WALL 1
+#define C_COMPILE_FLAGS_WERROR 2
+
+#define C_GENERATION_FLAGS_NOSTDINC 1
+#define C_GENERATION_FLAGS_FREESTANDING 2
 
 struct C_settings {
         char** include_dirs;
         char** include_files;
+	struct C_Macro {
+		char* name;
+		char* value;
+	}* macros;
 	uint32_t compile_flags;
 	uint32_t generation_flags;
 	enum C_version {

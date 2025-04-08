@@ -47,8 +47,6 @@ char* clang_compile(char* file, struct project p, struct C_settings settings) {
 	switch (settings.version) {
 	case C_VERSION_C89:
 		run_add_arg(&run, "-std=c89");
-		run_add_arg(&run, "-Wall");
-		run_add_arg(&run, "-pedantic");
 		break;
 	case C_VERSION_C99:
 		run_add_arg(&run, "-std=c99");
@@ -67,6 +65,12 @@ char* clang_compile(char* file, struct project p, struct C_settings settings) {
 		break;
 	default:
 		break;
+	}
+	if (settings.compile_flags&C_COMPILE_FLAGS_WERROR) {
+		run_add_arg(&run, "-Werror");
+	}
+	if (settings.compile_flags&C_COMPILE_FLAGS_WALL) {
+		run_add_arg(&run, "-Wall");
 	}
 
 
@@ -93,6 +97,19 @@ include_dirs:
 	} while (settings.include_files[i]);
 	i=0;
 includes_files:
+	if (!settings.macros) goto defines;
+	do {
+		run_add_arg(&run, "-D");
+		if (settings.macros->value) {
+			char* m = string_clone("%s=%s",settings.macros[i].name,settings.macros[i].value);
+			run_add_arg(&run, m);
+		} else {
+			run_add_arg(&run, settings.macros[i].name);
+		}
+		i++;
+	} while (settings.macros[i].name);
+	i=0;
+defines:
 
 	run_add_arg(&run, file);
 	if (rebuild) {

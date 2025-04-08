@@ -55,6 +55,10 @@ void run_run(struct run_project* project) {
 	}
 
 	pid_t pid = fork();
+	if (pid<0) {
+		printf("\nfailure\n");
+		exit(0);
+	}
 	if (pid == 0) {
 		if (project->wd) {
 			char wd[1024];
@@ -62,10 +66,12 @@ void run_run(struct run_project* project) {
 			char* w = string_clone("%s/%s",wd,project->wd);
 			int a=chdir(w);
 		}
-		int a = execvp(project->executable, project->args);
+		int a = execvp(project->executable, project->args);	
+		printf("\n failed to open %s\n",project->executable);
+		exit(0);
 	};
 	int status;
-	waitpid(pid,&status,0);
+	wait(NULL);
 	if (WIFEXITED(status)) {
 		if (status>127) {
 			printf("\nfailure %d\n",status);
