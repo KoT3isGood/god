@@ -10,6 +10,8 @@
 
 #define C_GENERATION_FLAGS_NOSTDINC 1
 #define C_GENERATION_FLAGS_FREESTANDING 2
+#define C_GENERATION_FLAGS_PIE 4
+#define C_GENERATION_FLAGS_PIC 8
 
 struct C_settings {
         char** include_dirs;

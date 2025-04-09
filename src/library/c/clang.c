@@ -40,8 +40,12 @@ char* clang_compile(char* file, struct project p, struct C_settings settings) {
 		run_add_arg(&run, "-gdwarf-2");
 	}
 	run_add_arg(&run, "-c");
-	run_add_arg(&run, "-fPIC");
-	run_add_arg(&run, "-fPIE");
+	if (settings.generation_flags&C_GENERATION_FLAGS_PIC) {
+		run_add_arg(&run, "-fPIC");
+	}
+	if (settings.generation_flags&C_GENERATION_FLAGS_PIE) {
+		run_add_arg(&run, "-fPIE");
+	}
 	run_add_arg(&run, "-target");
 	run_add_arg(&run, target);
 	switch (settings.version) {
