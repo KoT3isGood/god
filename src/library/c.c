@@ -79,6 +79,7 @@ struct project C_compile(struct project p, struct C_settings settings) {
 
 	build.b=p.b;
 	build.name=p.name;
+	build.files[num_files] = 0;
 	
 
 
