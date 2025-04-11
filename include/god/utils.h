@@ -34,6 +34,6 @@ void run_add_arg(struct run_project* project, char* arg);
 void run_run(struct run_project* project);
 struct run_project run_new(char* name);
 
-void add_item(char** list, char* item);
+void add_item(char*** list, char* item);
 
 #endif

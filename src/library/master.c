@@ -81,12 +81,12 @@ void run_run(struct run_project* project) {
 
 };
 
-void add_item(char** list, char* item) {
+void add_item(char*** list, char* item) {
 	int i = 0;
 	do {
 		i++;
-	} while(list[i]);
-	list=realloc(list,sizeof(char*)*(i+2));
-	list[i]=item;
-	list[i+1]=NULL;
+	} while((*list)[i]);
+	*list=realloc((*list),sizeof(char*)*(i+2));
+	(*list)[i]=item;
+	(*list)[i+1]=NULL;
 };
