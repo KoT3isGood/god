@@ -3,6 +3,7 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "unistd.h"
+#include "string.h"
 #include <sys/wait.h>
 
 int linkcounter = 0;
@@ -90,3 +91,9 @@ void add_item(char*** list, char* item) {
 	(*list)[i]=item;
 	(*list)[i+1]=NULL;
 };
+
+const char *get_file_extension(const char *filename) {
+    const char *dot = strrchr(filename, '.');
+    if (!dot || dot == filename) return "";
+    return dot + 1;
+}

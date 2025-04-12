@@ -36,4 +36,8 @@ struct run_project run_new(char* name);
 
 void add_item(char*** list, char* item);
 
+#define stricmp strcasecmp
+
+const char *get_file_extension(const char *filename);
+
 #endif

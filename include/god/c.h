@@ -30,7 +30,17 @@ struct C_settings {
 		C_VERSION_C17,
 		C_VERSION_C23,
 		C_VERSION_C2Y,
-	} version;
+	} cversion;
+	enum CPP_version {
+		CPP_VERSION_AUTO = 0,
+		CPP_VERSION_CPP98,
+		CPP_VERSION_CPP11,
+		CPP_VERSION_CPP14,
+		CPP_VERSION_CPP17,
+		CPP_VERSION_CPP20,
+		CPP_VERSION_CPP23,
+		CPP_VERSION_CPP2C,
+	} cppversion;
 };
 
 /*

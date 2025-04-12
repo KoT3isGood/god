@@ -6,6 +6,7 @@
 #include "stdio.h"
 #include "libgen.h"
 #include "unistd.h"
+#include "string.h"
 extern FILE* cdb;
 char* clang_compile(char* file, struct project p, struct C_settings settings) {
 
@@ -48,7 +49,27 @@ char* clang_compile(char* file, struct project p, struct C_settings settings) {
 	}
 	run_add_arg(&run, "-target");
 	run_add_arg(&run, target);
-	switch (settings.version) {
+
+	const char* extension = get_file_extension(file);
+	if (!stricmp(extension,"c"))
+		goto c_version_select;
+	else if (!stricmp(extension,"cpp"))
+		goto cpp_version_select;
+	else if (!stricmp(extension,"c++"))
+		goto cpp_version_select;
+	else {
+		printf(
+			TERMINAL_RED 
+			"error:"
+			TERMINAL_RESET
+			"%s is not supported\n", 
+			extension
+			);
+		return outputfile;
+	}
+
+c_version_select:
+	switch (settings.cversion) {
 	case C_VERSION_C89:
 		run_add_arg(&run, "-std=c89");
 		break;
@@ -70,13 +91,43 @@ char* clang_compile(char* file, struct project p, struct C_settings settings) {
 	default:
 		break;
 	}
+	goto version_selected;
+
+cpp_version_select:
+	switch (settings.cppversion) {
+	case CPP_VERSION_CPP98:
+		run_add_arg(&run, "-std=c++98");
+		break;
+	case CPP_VERSION_CPP11:
+		run_add_arg(&run, "-std=c++11");
+		break;
+	case CPP_VERSION_CPP14:
+		run_add_arg(&run, "-std=c++14");
+		break;
+	case CPP_VERSION_CPP17:
+		run_add_arg(&run, "-std=c++17");
+		break;
+	case CPP_VERSION_CPP20:
+		run_add_arg(&run, "-std=c++20");
+		break;
+	case CPP_VERSION_CPP23:
+		run_add_arg(&run, "-std=c++23");
+		break;
+	case CPP_VERSION_CPP2C:
+		run_add_arg(&run, "-std=c++2c");
+		break;
+	default:
+		break;
+	}
+	goto version_selected;
+version_selected:
+
 	if (settings.compile_flags&C_COMPILE_FLAGS_WERROR) {
 		run_add_arg(&run, "-Werror");
 	}
 	if (settings.compile_flags&C_COMPILE_FLAGS_WALL) {
 		run_add_arg(&run, "-Wall");
 	}
-
 
 
 	outputdir=string_clone("%s",outputfile);
