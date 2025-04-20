@@ -62,9 +62,9 @@ struct project C_compile(struct project p, struct C_settings settings) {
 	i=0;
 	do {
 		if (i%2)
-			printf(TERMINAL_YELLOW"  CC       %s\n"TERMINAL_RESET, p.files[i]);
-		else
 			printf(TERMINAL_WHITE"  CC       %s\n"TERMINAL_RESET, p.files[i]);
+		else
+			printf(TERMINAL_YELLOW"  CC       %s\n"TERMINAL_RESET, p.files[i]);
 		if (!strcmp(compiler,"clang")) {
 			char* file = clang_compile(p.files[i], p, settings);
 			build.files[i]=file;
