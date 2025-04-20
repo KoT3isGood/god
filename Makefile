@@ -10,7 +10,7 @@ src/library/c/clang.c
 LIBOBJFILES = $(LIBFILES:.c=.o)
 
 all:
-	god build
+	bin/god build
 	mv bin/god_staging bin/god
 
 help:
