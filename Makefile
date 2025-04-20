@@ -49,12 +49,12 @@ libgod.a: $(LIBOBJFILES) src/common.o
 	$(AR) rcs bin/libgod.a $(LIBOBJFILES) src/common.o
 
 clean:
-	find . -name "*.o" | xargs rm
+	-find . -name "*.o" | xargs rm
 
 remove:
-	rm -rf .god
-	rm -rf bin
-	find . -name "*.o" | xargs rm
+	-rm -rf .god
+	-rm -rf bin
+	-find . -name "*.o" | xargs rm
 
 
 rebuild: remove full

@@ -2,8 +2,10 @@
 #include "god/utils.h"
 #include "god/common.h"
 #include "libgen.h"
+#include "stdio.h"
 
 char* windres(char* file) {
+	printf(TERMINAL_YELLOW"  WINDRES  %s "TERMINAL_RESET, file);
 	compilecounter++;
 	struct run_project windres = run_new("x86_64-w64-mingw32-windres");
 	run_add_arg(&windres, file);

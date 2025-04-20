@@ -27,7 +27,6 @@ char* clang_compile(char* file, struct project p, struct C_settings settings) {
 	fix_filename(file);
 	char rebuild = needs_rebuild(get_modification_time(outputfile),get_modification_time(file));
 	if (!rebuild) {
-		printf(TERMINAL_BLUE"(cached)"TERMINAL_RESET);
 		if (cdb) {
 			goto build;
 		};

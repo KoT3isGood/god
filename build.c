@@ -41,9 +41,6 @@ int build(struct build_data b) {
 
         mv("bin",lib);
 
-
-
-
         struct project god_exe={};
         god_exe.b=&b;
         god_exe.name="god_staging";

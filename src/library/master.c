@@ -9,6 +9,7 @@
 int linkcounter = 0;
 int compilecounter = 0;
 char trace = 0;
+
 void mv(char* dest, char* source) {
 	#ifdef __WIN64__
 

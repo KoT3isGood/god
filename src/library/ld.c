@@ -58,9 +58,9 @@ char* ld_link_project(struct project p, struct link_settings settings) {
 			);
 		return NULL;
 	}
-	printf(TERMINAL_CYAN"Linking %s"TERMINAL_RESET"\n",p.name);
 
 	if (settings.type==LINK_TYPE_EXECUTABLE||settings.type==LINK_TYPE_DYNAMIC) {
+		printf(TERMINAL_CYAN"  LINK     %s"TERMINAL_RESET"\n",p.name);
 		char* outputfile=NULL;
 		char* linker;
 		if (settings.type==LINK_TYPE_EXECUTABLE) {
@@ -91,6 +91,26 @@ char* ld_link_project(struct project p, struct link_settings settings) {
 				break;
 			}
 		}
+		/* check for outdated files */
+		fix_filename(outputfile);
+		char outdated=0;
+		do {
+			fix_filename(p.files[i]);
+			char rebuild = needs_rebuild(get_modification_time(outputfile),get_modification_time(p.files[i]));
+			if (rebuild) 
+			{
+				outdated=1;
+				break;
+			}
+			i++;
+		} while (p.files[i]);
+
+		if (!outdated) {
+			return outputfile;
+		};
+		i=0;
+
+		/* run */
 
 		struct run_project run = run_new(linker);
 		run_add_arg(&run, "-g");
@@ -145,10 +165,29 @@ char* ld_link_project(struct project p, struct link_settings settings) {
 		return outputfile;
 	}
 	if (settings.type==LINK_TYPE_STATIC) {
-		struct run_project run = run_new("ar");
+		printf(TERMINAL_CYAN"  AR       %s"TERMINAL_RESET"\n",p.name);
 		char* outputfile=NULL;
-		run_add_arg(&run,"rcs");
 		outputfile=string_clone(".god/lib/%i/lib%s.a",linkcounter,p.name);
+		fix_filename(outputfile);
+
+		char outdated=0;
+		do {
+			fix_filename(p.files[i]);
+			char rebuild = needs_rebuild(get_modification_time(outputfile),get_modification_time(p.files[i]));
+			if (rebuild) 
+			{
+				outdated=1;
+				break;
+			}
+			i++;
+		} while (p.files[i]);
+		if (!outdated) {
+			return outputfile;
+		};
+		i=0;
+
+		struct run_project run = run_new("ar");
+		run_add_arg(&run,"rcs");
 		char* outputdir = string_clone(".god/lib/%i",linkcounter);
 		makedir(outputdir);
 		run_add_arg(&run, outputfile);

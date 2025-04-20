@@ -49,7 +49,6 @@ struct project C_compile(struct project p, struct C_settings settings) {
 			);
 		return (struct project){};
 	};
-	printf(TERMINAL_CYAN"Building %s"TERMINAL_RESET"\n",p.name);
 
 	if (compiler==NULL) {
 		compiler="clang";
@@ -62,7 +61,10 @@ struct project C_compile(struct project p, struct C_settings settings) {
 	build.files=malloc(sizeof(char**)*(num_files+1));
 	i=0;
 	do {
-		printf(TERMINAL_YELLOW"  [%i/%i] %s "TERMINAL_RESET,i+1, num_files, p.files[i]);
+		if (i%2)
+			printf(TERMINAL_YELLOW"  CC       %s\n"TERMINAL_RESET, p.files[i]);
+		else
+			printf(TERMINAL_WHITE"  CC       %s\n"TERMINAL_RESET, p.files[i]);
 		if (!strcmp(compiler,"clang")) {
 			char* file = clang_compile(p.files[i], p, settings);
 			build.files[i]=file;
@@ -73,7 +75,6 @@ struct project C_compile(struct project p, struct C_settings settings) {
 			build.files[i]=file;
 		}
 		#endif
-		printf("\n");
 		i++;
 	} while (p.files[i]);
 
