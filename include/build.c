@@ -11,6 +11,11 @@
 int main(int argc, char **argv) {
         int build(struct build_data);
         char *string_clone(const char *str,...);
+	extern char **g_argv;
+	extern int g_argc;
+
+	g_argc = argc-1;
+	g_argv = argv+1;
 
         struct build_data b = {};
         b.arch = BUILD_ARCH_x86_64;

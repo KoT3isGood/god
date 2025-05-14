@@ -40,4 +40,7 @@ void add_item(char*** list, char* item);
 
 const char *get_file_extension(const char *filename);
 
+#define STEP_FAILED -1
+int step(const char *name);
+
 #endif

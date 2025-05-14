@@ -10,6 +10,9 @@ int linkcounter = 0;
 int compilecounter = 0;
 char trace = 0;
 
+char **g_argv;
+int g_argc;
+
 void mv(char* dest, char* source) {
 	#ifdef __WIN64__
 
@@ -97,4 +100,14 @@ const char *get_file_extension(const char *filename) {
     const char *dot = strrchr(filename, '.');
     if (!dot || dot == filename) return "";
     return dot + 1;
+}
+
+int step(const char *name)
+{
+	for (int i = 0; i < g_argc; i++)
+	{
+		if (!strcmp(g_argv[i], name))
+			return i;
+	}
+	return STEP_FAILED;
 }
