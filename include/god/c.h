@@ -51,7 +51,6 @@ struct C_settings {
  */
 struct project C_compile(struct project p, struct C_settings settings);
 
-/* holy shit triple star */
 extern FILE* cdb;
 
 #endif
